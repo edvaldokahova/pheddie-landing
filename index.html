@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pheddie | A tua comunicação também se treina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563EB;
+            --secondary: #7C3AED;
+            --bg-color: #FFFFFF;
+            --surface: #F8FAFC;
+            --surface-alt: #F1F5F9;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 96px 0;
+        }
+
+        h1, h2, h3 {
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .text-gradient {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--gradient);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-outline {
+            display: inline-block;
+            background: transparent;
+            color: var(--text-main);
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Nav */
+        nav {
+            padding: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            padding-top: 48px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .hero-note {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Mockup UI */
+        .mockup-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .mockup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--surface-alt);
+        }
+
+        .mockup-score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .mockup-bar {
+            height: 6px;
+            background: var(--surface-alt);
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .mockup-fill {
+            height: 100%;
+            background: var(--gradient);
+            border-radius: 3px;
+        }
+
+        .stat-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 40px;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Sections */
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 64px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        /* Grid */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        /* Flow / Solution */
+        .flow-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface);
+            padding: 48px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .flow-step {
+            flex: 1;
+        }
+
+        .flow-icon {
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            color: var(--primary);
+        }
+
+        .flow-arrow {
+            color: var(--text-muted);
+            opacity: 0.3;
+        }
+
+        /* Cards */
+        .feature-card {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* Profile Mockup */
+        .profile-mockup {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            max-width: 400px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
+        }
+
+        .avatar-placeholder {
+            width: 80px;
+            height: 80px;
+            background: var(--surface-alt);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--surface);
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            margin: 4px;
+        }
+
+        /* Form */
+        .form-section {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 80px 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .lead-form {
+            max-width: 480px;
+            margin: 40px auto 0;
+            text-align: left;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .lead-form button {
+            width: 100%;
+        }
+
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 24px 0;
+        }
+        
+        .faq-item h3 {
+            font-size: 1.125rem;
+            margin-bottom: 8px;
+        }
+        
+        .faq-item p {
+            color: var(--text-muted);
+        }
+
+        /* Utilities */
+        .bg-surface { background-color: var(--surface); }
+        .text-center { text-align: center; }
+        
+        @media (max-width: 992px) {
+            .hero, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 3rem; }
+            .flow-container { flex-direction: column; gap: 32px; }
+            .flow-arrow svg { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <div class="container">
+        <nav>
+            <!-- Logo Pheddie (Texto Preto, Light Mode) -->
+            <svg width="180" height="54" viewBox="0 0 500 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="pheddieGradBlack" x1="20" y1="20" x2="130" y2="130" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#2563EB" />
+                    <stop offset="100%" stop-color="#7C3AED" />
+                  </linearGradient>
+                </defs>
+                <g transform="translate(10, 10) scale(0.65)">
+                  <path d="M65 35H135C151.569 35 165 48.4315 165 65V105C165 121.569 151.569 135 135 135H110L80 165V135H65C48.4315 135 35 121.569 35 105V65C35 48.4315 48.4315 35 65 35Z" stroke="url(#pheddieGradBlack)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M78 80V90" stroke="url(#pheddieGradBlack)" stroke-width="10" stroke-linecap="round"/>
+                  <path d="M100 68V102" stroke="url(#pheddieGradBlack)" stroke-width="10" stroke-linecap="round"/>
+                  <path d="M122 75V95" stroke="url(#pheddieGradBlack)" stroke-width="10" stroke-linecap="round"/>
+                </g>
+                <text x="150" y="92" fill="#0F172A" font-family="system-ui, sans-serif" font-size="64" font-weight="800" letter-spacing="-1.5">Pheddie</text>
+            </svg>
+            <a href="#espera" class="btn-outline">Lista de Espera</a>
+        </nav>
+    </div>
+
+    <!-- HERO -->
+    <header class="container hero">
+        <div>
+            <h1>A tua comunicação <span class="text-gradient">também se treina.</span></h1>
+            <p>Treina a tua comunicação com desafios reais, feedback inteligente e prática contínua. Evolui, constrói o teu perfil e conecta-te com pessoas que também querem comunicar melhor.</p>
+            <a href="#espera" class="btn-primary">Quero entrar na lista de espera</a>
+            <div class="hero-note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                Em breve em Angola · 10% de desconto para os primeiros membros
+            </div>
+        </div>
+        
+        <!-- Mockup Representação -->
+        <div class="mockup-card">
+            <div class="mockup-header">
+                <div>
+                    <h3 style="font-size: 1rem; color: var(--text-muted);">Desafio Concluído</h3>
+                    <p style="font-weight: 600;">"Porque devemos contratar-te?"</p>
+                </div>
+                <div class="mockup-score">82<span style="font-size: 1rem; color: var(--text-muted);">/100</span></div>
+            </div>
+            
+            <div class="stat-row">
+                <span>Clareza</span>
+                <div class="mockup-bar"><div class="mockup-fill" style="width: 86%;"></div></div>
+                <span>86</span>
+            </div>
+            <div class="stat-row">
+                <span>Estrutura</span>
+                <div class="mockup-bar"><div class="mockup-fill" style="width: 79%;"></div></div>
+                <span>79</span>
+            </div>
+            <div class="stat-row">
+                <span>Ritmo</span>
+                <div class="mockup-bar"><div class="mockup-fill" style="width: 84%;"></div></div>
+                <span>84</span>
+            </div>
+            
+            <div style="background: var(--surface-alt); padding: 16px; border-radius: 8px; margin-top: 24px; font-size: 0.875rem;">
+                <strong style="color: var(--primary);">Feedback da IA:</strong><br>
+                A tua resposta transmite confiança, mas poderias ser mais objetivo nos primeiros 15 segundos. Começa pela tua principal competência.
+            </div>
+        </div>
+    </header>
+
+    <!-- PROBLEMA -->
+    <section class="container">
+        <div class="section-header">
+            <h2>Saber o que dizer não é o mesmo que saber comunicar.</h2>
+            <p>A comunicação melhora com prática. O problema é que a maioria das pessoas quase nunca pratica de forma estruturada e recebe pouco feedback sobre aquilo que precisa melhorar.</p>
+        </div>
+        
+        <div class="grid-3">
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 20.5c-1.5 0-3-.5-4-1.5l-4-4 2-2 3.5 3.5 9-9 2 2-10 10c-.5.5-1.5 1-2.5 1z"/></svg>
+                </div>
+                <h3>Tens boas ideias</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 8px;">Mas tens dificuldade em explicá-las de forma clara quando o momento exige.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <h3>Ficas nervoso</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 8px;">Quando precisas falar diante de outras pessoas ou apresentar os teus projetos.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-wrapper">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3>Sabes responder</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 8px;">Mas não consegues estruturar bem a resposta numa entrevista ou negociação.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUÇÃO -->
+    <section class="bg-surface">
+        <div class="container">
+            <div class="section-header">
+                <h2>Bem-vindo ao teu treino de comunicação.</h2>
+                <p>Menos assistir. Mais praticar. A Pheddie não foi pensada para te prender horas a assistir aulas, mas sim para te colocar a enfrentar situações reais.</p>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                    </div>
+                    <h3>Falar</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">Recebes um desafio real.</p>
+                </div>
+                <div class="flow-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+                
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                    </div>
+                    <h3>Feedback</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">A IA analisa a tua resposta.</p>
+                </div>
+                <div class="flow-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    </div>
+                    <h3>Repetir</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">Tentas de novo aplicando os ajustes.</p>
+                </div>
+                <div class="flow-arrow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+
+                <div class="flow-step">
+                    <div class="flow-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>
+                    </div>
+                    <h3>Evoluir</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);">Acompanhas os teus resultados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIAS -->
+    <section class="container">
+        <div class="section-header">
+            <h2>Categorias de Treino</h2>
+            <p>O universo de treinamento da plataforma vai muito além da oratória tradicional.</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="feature-card" style="background: white;">
+                <div class="icon-wrapper"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                   <h3>Vendas</h3>
+                <p style="font-size: 0.875rem; color: var(--text-muted);">Pitch, objeções, persuasão e negociação.</p>
+            </div>
+            <div class="feature-card" style="background: white;">
+                <div class="icon-wrapper"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+                <h3>Entrevistas</h3>
+                <p style="font-size: 0.875rem; color: var(--text-muted);">Respostas estruturadas e simulação de perguntas difíceis.</p>
+            </div>
+            <div class="feature-card" style="background: white;">
+                <div class="icon-wrapper"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+                <h3>Liderança</h3>
+                <p style="font-size: 0.875rem; color: var(--text-muted);">Comunicação clara com equipas, feedback e apresentações.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULÁRIO DE CAPTURA COM FORMSPREE -->
+    <section id="espera" class="container">
+        <div class="form-section">
+            <h2>Garante o teu lugar na Pheddie</h2>
+            <p style="color: var(--text-muted); margin-top: 8px;">Junta-te à lista de espera e recebe 10% de desconto no lançamento em Angola.</p>
+            
+            <form action="https://formspree.io/f/mdekejwl" method="POST" class="lead-form">
+                <div class="input-group">
+                    <label for="nome">Nome completo</label>
+                    <input type="text" id="nome" name="nome" placeholder="O teu nome" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="O teu melhor e-mail" required>
+                </div>
+                
+                <button type="submit" class="btn-primary">Entrar na Lista de Espera</button>
+            </form>
+        </div>
+    </section>
+
+</body>
+  </html>
