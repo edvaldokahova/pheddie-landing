@@ -348,7 +348,14 @@
 
     form.querySelectorAll('.next-step').forEach(button=>button.addEventListener('click',()=>{
       const activeStep=steps[currentStep];
-      if(!activeStep.checkValidity()){activeStep.reportValidity();return;}
+      const inputs=[...activeStep.querySelectorAll('input, select')];
+      const allValid=inputs.every(input=>input.checkValidity());
+      
+      if(!allValid){
+        const firstInvalid=inputs.find(input=>!input.checkValidity());
+        if(firstInvalid) firstInvalid.reportValidity();
+        return;
+      }
       showStep(Math.min(currentStep+1,steps.length-1));
     }));
 
