@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="pt-AO">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pheddie: uma ferramenta poderosa para treinares a tua comunicação com desafios reais e feedback inteligente.">
+  <meta name="theme-color" content="#0F172A">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_AO">
+  <meta property="og:title" content="Pheddie — A tua comunicação também se treina">
+  <meta property="og:description" content="Treina a tua comunicação com desafios reais e feedback inteligente. Entra na lista de espera.">
+  <title>Pheddie — A tua comunicação também se treina</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='20' y1='20' x2='180' y2='180' gradientUnits='userSpaceOnUse'%3E%3Cstop offset='0' stop-color='%232563EB'/%3E%3Cstop offset='1' stop-color='%237C3AED'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M65 35H135C151.569 35 165 48.4315 165 65V105C165 121.569 151.569 135 135 135H110L80 165V135H65C48.4315 135 35 121.569 35 105V65C35 48.4315 48.4315 35 65 35Z' fill='none' stroke='url(%23g)' stroke-width='14' stroke-linejoin='round'/%3E%3Cpath d='M78 80V90M100 68V102M122 75V95' stroke='url(%23g)' stroke-width='11' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <script>
+    /* Ativa os estados iniciais das animações apenas se o navegador as suporta
+       e se a pessoa não pediu movimento reduzido. Sem isto, tudo fica visível. */
+    (function(){
+      var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if('IntersectionObserver' in window&&!reduce)document.documentElement.classList.add('js');
+    })();
+  </script>
+  <style>
+    /* ==========================================================
+       TOKENS
+       ========================================================== */
+    :root{
+      --primary:#2563EB;--secondary:#7C3AED;
+      --ink:#0F172A;--ink-2:#172036;
+      --muted:#5A6A81;--line:#E2E8F0;
+      --surface:#F8FAFC;--surface-2:#F1F5F9;--white:#fff;
+      --gradient:linear-gradient(135deg,var(--primary),var(--secondary));
+      --gradient-light:linear-gradient(135deg,#60A5FA,#A78BFA);
+      --shadow:0 30px 80px -20px rgba(15,23,42,.18),0 8px 24px -8px rgba(15,23,42,.08);
+      --ease:cubic-bezier(.22,.7,.2,1);
+      --header-h:82px;
+      --space:clamp(60px,7.5vw,92px);
+    }
+
+    /* ==========================================================
+       BASE
+       ========================================================== */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 12px);scrollbar-gutter:stable;-webkit-text-size-adjust:100%}
+    html.modal-open{overflow:hidden}
+    body{font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
+    h1,h2,h3{font-family:'Manrope',sans-serif;line-height:1.12;letter-spacing:-.035em;text-wrap:balance}
+    p{text-wrap:pretty}
+    a{color:inherit}
+    ::selection{background:rgba(37,99,235,.2)}
+    :focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:6px}
+    .container{width:min(1160px,calc(100% - 48px));margin:auto}
+    .eyebrow{display:inline-flex;align-items:center;font-size:.9rem;font-weight:700;letter-spacing:-.005em;color:var(--primary)}
+    .eyebrow-pill{padding:7px 14px;border:1px solid rgba(37,99,235,.2);border-radius:99px;background:rgba(37,99,235,.05);font-size:.84rem}
+    .gradient-text{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+
+    /* Botões */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:54px;padding:0 26px;border:0;border-radius:14px;font:700 .95rem 'DM Sans',sans-serif;text-decoration:none;cursor:pointer;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .2s,color .2s,background-position .4s var(--ease)}
+    .btn [aria-hidden="true"]{display:inline-block;transition:transform .3s var(--ease)}
+    .btn:hover [aria-hidden="true"]{transform:translateX(3px)}
+    .btn:active{transform:translateY(0) scale(.99)}
+    .btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
+    .btn-primary{color:#fff;background:var(--gradient) 0 0/140% 100%;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 14px 30px -10px rgba(37,99,235,.6)}
+    .btn-primary:hover{transform:translateY(-2px);background-position:100% 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 20px 36px -12px rgba(37,99,235,.7)}
+    .btn-ghost{color:var(--ink);border:1px solid #D5DEEA;background:#fff}
+    .btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
+
+    /* ==========================================================
+       ANNOUNCEMENT BAR (rolagem contínua)
+       ========================================================== */
+    .announcement{position:relative;display:block;height:42px;overflow:hidden;color:#E2E8F0;text-decoration:none;font-size:.86rem;font-weight:500;background:
+      radial-gradient(45% 300% at 12% 0%,rgba(37,99,235,.42),transparent 70%),
+      radial-gradient(45% 300% at 88% 100%,rgba(124,58,237,.38),transparent 70%),
+      var(--ink);
+      border-bottom:1px solid rgba(148,163,184,.16);
+      -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+    .announcement-track{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+    .announcement.is-ready .announcement-track{justify-content:flex-start;width:max-content;animation:marquee var(--marquee-duration,40s) linear infinite;will-change:transform}
+    .announcement:hover .announcement-track,.announcement:focus-visible .announcement-track{animation-play-state:paused}
+    .announcement:focus-visible{outline-offset:-3px}
+    .announcement-group{display:flex;align-items:center;flex:none}
+    .announcement-unit{display:inline-flex;align-items:center;flex:none}
+    .announcement-item{display:inline-block;white-space:nowrap;letter-spacing:.005em}
+    .announcement-sep{flex:none;width:5px;height:5px;margin:0 38px;border-radius:50%;background:var(--gradient-light)}
+    .hl{font-weight:800;background:linear-gradient(90deg,#60A5FA,#818CF8 55%,#A78BFA);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+    @keyframes marquee{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+
+    /* ==========================================================
+       HEADER
+       ========================================================== */
+    .site-header{position:sticky;top:0;z-index:50;padding:16px 0;background:rgba(255,255,255,0);border-bottom:1px solid transparent;transition:background-color .3s,border-color .3s,box-shadow .3s}
+    .site-header.is-scrolled{background:rgba(255,255,255,.95);-webkit-backdrop-filter:saturate(1.6) blur(16px);backdrop-filter:saturate(1.6) blur(16px);border-bottom-color:rgba(226,232,240,.9);box-shadow:0 12px 32px -16px rgba(15,23,42,.14)}
+    nav{display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .logo-link{display:block;border-radius:8px}
+    .logo{display:block;width:168px;height:50px}
+    .nav-right{display:flex;align-items:center;gap:32px}
+    .nav-link{font-size:.9rem;font-weight:600;text-decoration:none;color:var(--muted);transition:color .2s}
+    .nav-link:hover{color:var(--ink)}
+    .nav-cta{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 20px;border-radius:99px;background:var(--ink);color:#fff;font-size:.88rem;font-weight:700;text-decoration:none;transition:background-color .25s,transform .25s var(--ease),box-shadow .25s}
+    .nav-cta:hover{background:var(--primary);transform:translateY(-1px);box-shadow:0 12px 24px -10px rgba(37,99,235,.65)}
+    .scroll-progress{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gradient);transform-origin:0 50%;transform:scaleX(var(--progress,0));pointer-events:none}
+
+    /* ==========================================================
+       HERO
+       ========================================================== */
+    .hero-shell{position:relative;isolation:isolate;overflow:clip;margin-top:calc(var(--header-h) * -1)}
+    .hero-shell:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:
+      radial-gradient(620px 440px at 6% 0%,rgba(37,99,235,.13),transparent 70%),
+      radial-gradient(560px 460px at 94% 28%,rgba(124,58,237,.11),transparent 70%)}
+    .hero{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:72px;align-items:center;padding:calc(var(--header-h) + 44px) 0 88px}
+    .hero h1{max-width:700px;margin:22px 0 24px;font-size:clamp(2.6rem,4.6vw,4.3rem);font-weight:800;letter-spacing:-.045em;line-height:1.05}
+    .hero-copy{max-width:590px;font-size:1.16rem;line-height:1.7;color:var(--muted)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+    .micro-proof{display:flex;align-items:center;gap:9px;margin-top:20px;color:var(--muted);font-size:.86rem}
+    .micro-proof svg{color:#10B981;flex:none}
+    .hero-text>*{animation:rise .9s var(--ease) both}
+    .hero-text>:nth-child(2){animation-delay:.08s}.hero-text>:nth-child(3){animation-delay:.16s}.hero-text>:nth-child(4){animation-delay:.24s}.hero-text>:nth-child(5){animation-delay:.32s}
+    @keyframes rise{from{opacity:0;transform:translate3d(0,18px,0)}to{opacity:1;transform:none}}
+
+    /* Cartão da aplicação — o momento memorável do hero */
+    .visual{position:relative;isolation:isolate;padding-bottom:34px}
+    .visual:before{content:"";position:absolute;inset:8% -4% 6% 4%;z-index:-1;background:linear-gradient(130deg,rgba(37,99,235,.18),rgba(124,58,237,.15));filter:blur(50px);border-radius:50%}
+    .app-stack{position:relative;isolation:isolate}
+    .app-stack:before,.app-stack:after{content:"";position:absolute;z-index:-1;border:1px solid var(--line);border-radius:24px;background:#fff}
+    .app-stack:before{inset:16px 24px -16px;opacity:.75;box-shadow:0 20px 40px -20px rgba(15,23,42,.1)}
+    .app-stack:after{inset:30px 48px -30px;opacity:.45}
+    .app-card{position:relative;padding:26px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow)}
+    .app-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--surface-2)}
+    .app-label{font-size:.8rem;font-weight:700;color:var(--muted)}
+    .app-title{margin-top:6px;font-size:1.04rem;font-weight:700;line-height:1.35}
+    .score{font:800 3rem 'Manrope',sans-serif;letter-spacing:-.04em;color:var(--primary);line-height:1;white-space:nowrap}
+    .score small{font:600 .85rem 'DM Sans',sans-serif;letter-spacing:0;color:var(--muted)}
+    .wave{display:flex;align-items:center;gap:14px;margin-top:20px;padding:12px 14px;border-radius:14px;background:var(--surface)}
+    .wave-play{display:grid;place-items:center;flex:none;width:34px;height:34px;border-radius:50%;background:var(--gradient);color:#fff;box-shadow:0 8px 16px -6px rgba(37,99,235,.55)}
+    .wave-bars{display:flex;align-items:center;gap:3px;flex:1;height:34px;min-width:0}
+    .wave-bars i{flex:1;max-width:4px;min-width:0;height:calc(var(--h)*100%);border-radius:3px;background:#CBD5E1;transform-origin:center;transition:transform .55s var(--ease) calc(var(--i)*16ms + 250ms),opacity .4s ease calc(var(--i)*16ms + 250ms)}
+    .wave-bars i.on{background:linear-gradient(180deg,var(--primary),var(--secondary))}
+    .wave-time{flex:none;font-size:.78rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+    .metric{display:grid;grid-template-columns:84px 1fr 30px;gap:13px;align-items:center;margin-top:18px;font-size:.84rem;font-weight:700}
+    .metric>span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+    .bar{height:7px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+    .fill{width:var(--w);height:100%;border-radius:99px;background:var(--gradient);transform-origin:left center;transition:transform 1.1s var(--ease) calc(.9s + var(--k,0)*.12s)}
+    .feedback{margin-top:24px;padding:17px 18px;border-radius:14px;background:var(--surface-2);font-size:.88rem;line-height:1.6;color:var(--muted);transition:opacity .7s ease 1.5s,transform .7s var(--ease) 1.5s}
+    .feedback strong{color:var(--primary)}
+    .floating-note{position:absolute;right:-18px;bottom:0;display:flex;align-items:center;gap:10px;padding:13px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 18px 40px -12px rgba(15,23,42,.18);font-size:.8rem;font-weight:700;transition:opacity .6s ease 1.9s,transform .7s var(--ease) 1.9s}
+    .dot{flex:none;width:9px;height:9px;border-radius:50%;background:#10B981;box-shadow:0 0 0 5px rgba(16,185,129,.14)}
+    /* Estado inicial da sequência do hero (só com JS) */
+    .js .visual:not(.is-live) .wave-bars i{transform:scaleY(.08);opacity:0}
+    .js .visual:not(.is-live) .fill{transform:scaleX(0)}
+    .js .visual:not(.is-live) .feedback{opacity:0;transform:translateY(8px)}
+    .js .visual:not(.is-live) .floating-note{opacity:0;transform:translateY(10px)}
+
+    /* ==========================================================
+       SECÇÕES E TIPOGRAFIA
+       ========================================================== */
+    section{padding:var(--space) 0}
+    .flush-top{padding-top:0}
+    .section-heading{max-width:720px;margin:0 auto 52px;text-align:center}
+    .section-heading h2{margin:14px 0 18px;font-size:clamp(2rem,3.6vw,3.15rem)}
+    .section-heading p{color:var(--muted);font-size:1.06rem;line-height:1.7}
+    .section-heading p+p{margin-top:14px}
+    .section-heading strong{color:var(--ink)}
+
+    /* Cartões */
+    .pain-grid,.category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{padding:30px;border:1px solid var(--line);border-radius:20px;background:#fff;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s}
+    .card:hover{transform:translateY(-4px);border-color:#CFD9E6;box-shadow:0 24px 48px -24px rgba(15,23,42,.18)}
+    .icon{display:grid;place-items:center;width:48px;height:48px;margin-bottom:22px;border-radius:14px;background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(124,58,237,.12));color:var(--primary)}
+    .card h3{font-size:1.18rem;margin-bottom:9px}
+    .card p{color:var(--muted);font-size:.94rem;line-height:1.65}
+    .card-accent{border-color:transparent;background:linear-gradient(180deg,#fff,#F6F8FF) padding-box,var(--gradient) border-box;box-shadow:0 24px 48px -28px rgba(37,99,235,.45)}
+    .card-accent:hover{border-color:transparent}
+    .category-card{background:var(--surface)}
+    .category-card .icon{background:#fff;border:1px solid var(--line)}
+
+    /* Bandas escuras */
+    .dark-band{position:relative;isolation:isolate;overflow:clip;background:var(--ink);color:#fff}
+    .dark-band:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:
+      radial-gradient(720px 400px at 10% 0%,rgba(37,99,235,.24),transparent 70%),
+      radial-gradient(640px 400px at 92% 100%,rgba(124,58,237,.22),transparent 70%)}
+    .dark-band .section-heading p{color:#A5B1C5}
+    .dark-band .section-heading strong{color:#fff}
+    .dark-band .eyebrow{color:#93C5FD}
+    .dark-band .gradient-text{background-image:var(--gradient-light)}
+    .dark-band .card{border-color:rgba(148,163,184,.2);background:rgba(255,255,255,.045)}
+    .dark-band .card:hover{border-color:rgba(147,197,253,.45);box-shadow:0 24px 48px -24px rgba(0,0,0,.6)}
+    .dark-band .card h3{color:#fff}
+    .dark-band .card p{color:#A5B1C5}
+    .dark-band .icon{background:rgba(96,165,250,.13);color:#93C5FD}
+
+    /* Método — linha do tempo que se acende com o scroll */
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:24px}
+    .flow-step{position:relative}
+    .step-number{position:relative;z-index:1;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;border:1px solid transparent;background:var(--gradient);color:#fff;font:800 .82rem 'Manrope',sans-serif;box-shadow:0 0 0 6px rgba(96,165,250,.14),0 8px 24px -6px rgba(96,165,250,.55);transition:background .4s,color .4s,border-color .4s,box-shadow .4s}
+    .js .flow-step:not(.is-lit) .step-number{border-color:rgba(148,163,184,.3);background:var(--ink-2);color:#93C5FD;box-shadow:none}
+    .flow-step:not(:last-child):before,.flow-step:not(:last-child):after{content:"";position:absolute;top:16px;left:46px;width:calc(100% - 34px);height:2px;border-radius:2px}
+    .flow-step:not(:last-child):before{background:rgba(148,163,184,.22)}
+    .flow-step:not(:last-child):after{background:linear-gradient(90deg,#60A5FA,#A78BFA);transform-origin:left center;transform:scaleX(var(--seg,1))}
+    .flow-step h3{margin:22px 0 8px;font-size:1.1rem}
+    .flow-step p{color:#A5B1C5;font-size:.9rem;line-height:1.65}
+
+    /* Evidência */
+    .evidence-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+    .evidence-card{position:relative;display:flex;flex-direction:column;min-height:100%;padding:30px;border:1px solid var(--line);border-radius:20px;background:var(--surface);overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+    .evidence-card:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient)}
+    .evidence-card:hover{transform:translateY(-4px);box-shadow:0 24px 48px -24px rgba(15,23,42,.18)}
+    .evidence-stat{display:flex;align-items:baseline;gap:10px;margin-bottom:22px}
+    .evidence-number{min-width:1.2em;font:800 3.4rem/.95 'Manrope',sans-serif;letter-spacing:-.06em;font-variant-numeric:tabular-nums;background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+    .evidence-label{font-size:.88rem;font-weight:700;color:var(--muted)}
+    .evidence-card h3{margin-bottom:10px;font-size:1.17rem}
+    .evidence-card p{flex:1;color:var(--muted);font-size:.92rem;line-height:1.65}
+    .evidence-source{display:inline-flex;align-self:flex-start;margin-top:22px;padding:7px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--muted);font-size:.74rem;font-weight:700}
+    .evidence-summary{margin:24px auto 0;padding:24px 30px;border:1px solid rgba(37,99,235,.14);border-radius:18px;background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(124,58,237,.07));text-align:center;color:var(--muted);font-size:.96rem}
+    .evidence-summary strong{color:var(--ink)}
+    .evidence-note{max-width:640px;margin:26px auto 0;text-align:center;color:var(--muted);font-size:.86rem}
+
+    /* Área de evolução (layout dividido) */
+    .split{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:88px;align-items:center}
+    .split-copy h2{margin:14px 0 18px;font-size:clamp(2rem,3.6vw,3.1rem)}
+    .split-copy p{color:var(--muted);font-size:1.06rem;line-height:1.7}
+    .split-copy p+p{margin-top:14px}
+    .feature-list{border-top:1px solid var(--line)}
+    .feature-row{display:grid;grid-template-columns:48px 1fr;gap:22px;align-items:start;padding:28px 0;border-bottom:1px solid var(--line)}
+    .feature-row .icon{margin:0;transition:background .3s,color .3s}
+    .feature-row:hover .icon{background:var(--gradient);color:#fff}
+    .feature-row h3{margin:3px 0 6px;font-size:1.2rem}
+    .feature-row p{color:var(--muted);font-size:.95rem;line-height:1.65}
+
+    /* Manifesto */
+    .manifesto .section-heading{max-width:820px;margin-bottom:0}
+    .manifesto h2{font-size:clamp(2.1rem,4.4vw,3.6rem)}
+    .manifesto .pull{margin-top:38px;font:700 clamp(1.15rem,2vw,1.5rem)/1.45 'Manrope',sans-serif;letter-spacing:-.02em;color:var(--ink)}
+    .manifesto .pull:before{content:"";display:block;width:56px;height:3px;margin:0 auto 26px;border-radius:9px;background:var(--gradient)}
+    .manifesto .pull strong{font-weight:inherit}
+
+    /* FAQ */
+    .faq-section{padding-bottom:40px}
+    .faq-section .section-heading{margin-bottom:34px}
+    .faq-accordion{width:min(780px,100%);margin:0 auto;border-top:1px solid var(--line)}
+    .faq-accordion details{border-bottom:1px solid var(--line)}
+    .faq-accordion summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 0;list-style:none;cursor:pointer;font:700 1.02rem 'Manrope',sans-serif;letter-spacing:-.01em;color:var(--ink);transition:color .2s}
+    .faq-accordion summary:hover{color:var(--primary)}
+    .faq-accordion summary::-webkit-details-marker{display:none}
+    .faq-accordion summary:after{content:"";flex:none;width:30px;height:30px;border:1px solid var(--line);border-radius:9px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center/14px no-repeat;transition:transform .3s var(--ease),background-color .2s}
+    .faq-accordion details[open] summary:after{transform:rotate(180deg);background-color:rgba(37,99,235,.06)}
+    .faq-accordion details p{max-width:680px;padding:0 48px 24px 0;color:var(--muted);font-size:.96rem;line-height:1.7}
+    .faq-accordion details[open] p{animation:faqIn .4s var(--ease)}
+    @keyframes faqIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+    /* ==========================================================
+       CAPTURA / FORMULÁRIO
+       ========================================================== */
+    .capture{padding-top:40px}
+    .capture-box{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:64px;align-items:center;padding:64px;border-radius:28px;background:linear-gradient(160deg,#F8FAFF,var(--surface));border:1px solid var(--line);overflow:hidden;overflow:clip;isolation:isolate}
+    .capture-box:before{content:"";position:absolute;z-index:-1;top:-160px;left:-140px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.12),transparent 68%)}
+    .capture-box:after{content:"";position:absolute;z-index:-1;right:-160px;bottom:-200px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.16),transparent 68%)}
+    .capture-copy h2{font-size:clamp(2rem,3.6vw,3.2rem);margin:15px 0 16px}
+    .capture-copy p{max-width:500px;color:var(--muted);line-height:1.7}
+    .capture-copy p+p{margin-top:14px}
+    .capture-copy p strong{color:var(--ink)}
+    .benefit{display:flex;gap:10px;align-items:flex-start;margin-top:22px!important;font-size:.9rem;font-weight:600}
+    .benefit svg{color:#10B981;flex:none;margin-top:3px}
+
+    .lead-form{position:relative;padding:30px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 30px 60px -28px rgba(15,23,42,.22),0 8px 20px -10px rgba(15,23,42,.06)}
+    .step-progress{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;color:var(--muted);font-size:.76rem;font-weight:700;white-space:nowrap}
+    .progress-track{height:5px;flex:1;margin:0 12px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+    .progress-fill{height:100%;width:16.66%;border-radius:99px;background:var(--gradient);transition:width .4s var(--ease)}
+    .form-step{display:none}
+    .form-step.is-active{display:block;animation:stepIn .45s var(--ease)}
+    @keyframes stepIn{from{opacity:0;transform:translateX(calc(var(--dir,1)*18px))}to{opacity:1;transform:none}}
+    .field{margin-bottom:18px}
+    .field label,.field-label{display:block;margin-bottom:8px;font-size:.86rem;font-weight:700}
+    .field input,.field select{width:100%;height:52px;padding:0 15px;border:1px solid #D5DEEA;border-radius:12px;background:#fff;color:var(--ink);font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+    .field input::placeholder{color:#94A3B8}
+    .field input:hover,.field select:hover{border-color:#B7C4D6}
+    .field input:focus,.field select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+    .field select{padding-right:42px;appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right 15px center/16px no-repeat}
+    .field.has-error input,.field.has-error select{border-color:#DC2626;box-shadow:0 0 0 4px rgba(220,38,38,.09)}
+    .field-error{margin-top:7px;color:#B91C1C;font-size:.8rem;font-weight:600;animation:faqIn .3s var(--ease)}
+    .lead-form .btn{width:100%}
+    .step-actions{display:flex;gap:10px}
+    .step-actions .btn{flex:1}
+    .step-actions .btn-back{flex:0 0 auto;width:auto;padding:0 22px}
+    .btn-back{color:var(--muted);border:1px solid #D5DEEA;background:#fff;box-shadow:none}
+    .btn-back:hover{border-color:var(--primary);color:var(--primary)}
+    .choice-grid{display:grid;gap:10px}
+    .choice{position:relative}
+    .choice input{position:absolute;opacity:0;pointer-events:none}
+    .choice label{display:flex;align-items:center;min-height:50px;margin:0;padding:0 15px;border:1px solid #D5DEEA;border-radius:12px;background:#fff;color:var(--ink);font-size:.9rem;font-weight:600;cursor:pointer;transition:border-color .2s,background-color .2s,box-shadow .2s}
+    .choice label:before{content:"";flex:none;width:18px;height:18px;margin-right:12px;border:1.5px solid #B7C4D6;border-radius:50%;background:#fff;transition:border-color .2s,background .2s}
+    .choice label:hover{border-color:var(--primary)}
+    .choice input:checked+label{border-color:var(--primary);background:rgba(37,99,235,.06);box-shadow:0 0 0 3px rgba(37,99,235,.09)}
+    .choice input:checked+label:before{border-color:var(--primary);background:radial-gradient(circle,var(--primary) 0 4.5px,#fff 5.5px)}
+    .choice input:focus-visible+label{outline:2px solid var(--primary);outline-offset:2px}
+    .fine-print{margin-top:14px;text-align:center;color:var(--muted);font-size:.74rem}
+    .form-status{min-height:22px;margin-top:10px;text-align:center;font-size:.86rem;font-weight:600}
+    .form-status.error{color:#B91C1C}
+    .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+    /* Estado de sucesso */
+    .form-success{display:none;padding:14px 4px;text-align:center;outline:none}
+    .lead-form.is-done .form-success{display:block;animation:stepIn .5s var(--ease)}
+    .lead-form.is-done .step-progress,.lead-form.is-done .form-step,.lead-form.is-done .fine-print,.lead-form.is-done .form-status{display:none}
+    .success-icon{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 20px;border-radius:50%;background:var(--gradient);color:#fff;box-shadow:0 16px 32px -10px rgba(37,99,235,.6)}
+    .success-icon path{stroke-dasharray:26;stroke-dashoffset:26;animation:draw .6s .25s var(--ease) forwards}
+    @keyframes draw{to{stroke-dashoffset:0}}
+    .form-success h3{margin-bottom:8px;font-size:1.4rem}
+    .form-success p{color:var(--muted);font-size:.95rem;line-height:1.65}
+    .form-success p+p{margin-top:8px}
+
+    /* ==========================================================
+       FOOTER
+       ========================================================== */
+    footer{padding:34px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.84rem}
+    .footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}
+    .footer-inner a{text-decoration:none;font-weight:600;transition:color .2s}
+    .footer-inner a:hover{color:var(--primary)}
+    .legal-links{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px}
+    .legal-link{background:none;border:0;padding:0;color:var(--muted);font:inherit;cursor:pointer;transition:color .2s}
+    .legal-link:hover{color:var(--primary)}
+
+    /* ==========================================================
+       MODAIS (<dialog> nativo: foco preso, ESC e camada superior)
+       ========================================================== */
+    .modal{width:min(660px,calc(100% - 32px));max-width:none;max-height:none;margin:auto;padding:0;border:0;background:transparent;color:var(--ink);overflow:visible}
+    .modal::backdrop{background:rgba(15,23,42,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+    .modal[open]{animation:modalIn .35s var(--ease)}
+    .modal[open]::backdrop{animation:fadeIn .3s ease}
+    .modal.is-closing{animation:modalOut .2s ease forwards}
+    .modal.is-closing::backdrop{animation:fadeOut .2s ease forwards}
+    .modal-panel{position:relative;display:flex;flex-direction:column;max-height:min(760px,calc(100vh - 32px));max-height:min(760px,calc(100dvh - 32px));overflow:hidden;border:1px solid rgba(226,232,240,.9);border-radius:22px;background:#fff;box-shadow:0 40px 100px -20px rgba(15,23,42,.4)}
+    .modal-panel:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--gradient);z-index:1}
+    .modal-scroll{flex:1 1 auto;min-height:0;min-width:0;overflow-y:auto;overscroll-behavior:contain;padding:44px 40px 38px}
+    .modal-close{position:absolute;top:16px;right:16px;z-index:2;display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--muted);font-size:1.25rem;line-height:1;cursor:pointer;transition:border-color .2s,color .2s}
+    .modal-close:hover{border-color:var(--primary);color:var(--primary)}
+    .modal .eyebrow{display:block;margin-bottom:10px}
+    .modal h2{margin-bottom:18px;padding-right:36px;font-size:clamp(1.8rem,4vw,2.4rem)}
+    .modal h3{margin:24px 0 7px;font-size:1.02rem}
+    .modal p{color:var(--muted);font-size:.94rem;line-height:1.7}
+    @keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+    @keyframes modalOut{to{opacity:0;transform:translateY(8px) scale(.985)}}
+    @keyframes fadeIn{from{opacity:0}}
+    @keyframes fadeOut{to{opacity:0}}
+
+    /* ==========================================================
+       REVEAL AO SCROLL (só ativo com JS e sem "movimento reduzido")
+       ========================================================== */
+    .js .reveal{opacity:0;transform:translate3d(0,22px,0);transition:opacity .8s var(--ease) var(--d,0ms),transform .8s var(--ease) var(--d,0ms)}
+    .js .reveal.is-visible{opacity:1;transform:none}
+
+    /* ==========================================================
+       RESPONSIVO
+       ========================================================== */
+    @media(max-width:1000px){
+      .split{grid-template-columns:minmax(0,1fr);gap:44px}
+      .split-copy{text-align:center;max-width:680px;margin:0 auto}
+    }
+    @media(max-width:900px){
+      .hero{grid-template-columns:minmax(0,1fr);gap:60px;padding-top:calc(var(--header-h) + 44px)}
+      .visual{max-width:600px}
+      .floating-note{right:8px}
+      .capture-box{grid-template-columns:minmax(0,1fr);gap:38px;padding:42px}
+      .evidence-grid{grid-template-columns:minmax(0,1fr)}
+      .evidence-card{min-height:0}
+      /* Linha do tempo passa a vertical */
+      .flow{grid-template-columns:minmax(0,1fr);gap:0}
+      .flow-step{display:grid;grid-template-columns:34px 1fr;column-gap:20px;padding-bottom:34px}
+      .flow-step:last-child{padding-bottom:0}
+      .step-number{grid-row:1/span 2;align-self:start}
+      .flow-step h3,.flow-step p{grid-column:2}
+      .flow-step h3{margin:4px 0 6px}
+      .flow-step:not(:last-child):before,.flow-step:not(:last-child):after{top:46px;bottom:10px;left:16px;width:2px;height:auto}
+      .flow-step:not(:last-child):after{background:linear-gradient(180deg,#60A5FA,#A78BFA);transform-origin:center top;transform:scaleY(var(--seg,1))}
+    }
+    @media(max-width:650px){
+      :root{--header-h:66px}
+      .container{width:min(100% - 34px,1160px)}
+      .site-header{padding:12px 0}
+      .logo{width:140px;height:42px}
+      .nav-hide-sm{display:none}
+      .nav-cta{min-height:40px;padding:0 15px;font-size:.8rem}
+      .nav-cta .long{display:none}
+      .hero{padding:calc(var(--header-h) + 32px) 0 64px}
+      .hero h1{font-size:2.6rem}
+      .hero-copy{font-size:1.05rem}
+      .hero-actions .btn{width:100%}
+      .app-card{padding:20px}
+      .score{font-size:2.5rem}
+      .metric{grid-template-columns:72px 1fr 28px}
+      .wave{gap:10px;padding:10px 12px}
+      .wave-bars{gap:2px}
+      .visual{padding-bottom:0}
+      .floating-note{position:relative;right:auto;bottom:auto;width:fit-content;max-width:100%;margin:42px auto 0}
+      .pain-grid,.category-grid{grid-template-columns:minmax(0,1fr)}
+      .card{padding:26px}
+      .section-heading{margin-bottom:36px}
+      .capture-box{padding:28px 18px;border-radius:22px}
+      .lead-form{padding:22px 18px}
+      .step-progress .step-label{display:none}
+      .footer-inner{align-items:flex-start;flex-direction:column}
+      .faq-accordion summary{font-size:.95rem}
+      .faq-accordion details p{font-size:.9rem;padding-right:8px}
+      .modal-scroll{padding:40px 22px 28px}
+      .modal-panel{border-radius:18px}
+      .announcement-sep{margin:0 26px}
+    }
+
+    /* ==========================================================
+       ACESSIBILIDADE — movimento reduzido e impressão
+       ========================================================== */
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
+      .hero-text>*{animation:none}
+      .announcement{height:auto;padding:10px 16px;-webkit-mask-image:none;mask-image:none}
+      .announcement-track,.announcement.is-ready .announcement-track{width:100%!important;justify-content:center;animation:none!important}
+      .announcement-item{white-space:normal;text-align:center}
+      .announcement-sep,.announcement-group[aria-hidden="true"],.announcement-unit[aria-hidden="true"]{display:none}
+    }
+    @media print{
+      .js .reveal{opacity:1!important;transform:none!important}
+      .site-header,.announcement{position:static}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Announcement bar: rolagem contínua, pausa ao passar o rato -->
+  <a class="announcement" href="#espera" aria-label="Faça parte da lista de espera e ganhe um cupão de 10% de desconto na primeira assinatura do Plano Pro">
+    <div class="announcement-track">
+      <div class="announcement-group">
+        <span class="announcement-unit"><span class="announcement-item">Faça parte da lista de espera e ganhe um <strong class="hl">cupão de 10%</strong> de desconto na primeira assinatura do <strong class="hl">Plano Pro</strong> <span aria-hidden="true">🔥</span></span><span class="announcement-sep" aria-hidden="true"></span></span>
+      </div>
+    </div>
+  </a>
+
+  <header class="site-header">
+    <div class="container"><nav aria-label="Navegação principal">
+      <!-- Logótipo original preservado -->
+      <a class="logo-link" href="#" aria-label="Pheddie — início">
+      <svg class="logo" viewBox="0 0 500 150" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pheddie">
+        <defs><linearGradient id="pheddieGradBlack" x1="20" y1="20" x2="130" y2="130" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#7C3AED"/></linearGradient></defs>
+        <g transform="translate(10, 10) scale(0.65)"><path d="M65 35H135C151.569 35 165 48.4315 165 65V105C165 121.569 151.569 135 135 135H110L80 165V135H65C48.4315 135 35 121.569 35 105V65C35 48.4315 48.4315 35 65 35Z" stroke="url(#pheddieGradBlack)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M78 80V90" stroke="url(#pheddieGradBlack)" stroke-width="10" stroke-linecap="round"/><path d="M100 68V102" stroke="url(#pheddieGradBlack)" stroke-width="10" stroke-linecap="round"/><path d="M122 75V95" stroke="url(#pheddieGradBlack)" stroke-width="10" stroke-linecap="round"/></g>
+        <text x="150" y="92" fill="#0F172A" font-family="system-ui, sans-serif" font-size="64" font-weight="800" letter-spacing="-1.5">Pheddie</text>
+      </svg>
+      </a>
+      <div class="nav-right">
+        <a class="nav-link nav-hide-sm" href="#como-funciona">Como funciona</a>
+        <a class="nav-link nav-hide-sm" href="#faq">Dúvidas</a>
+        <a class="nav-cta" href="#espera"><span><span class="long">Entrar na </span>lista de espera</span> <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav></div>
+    <div class="scroll-progress" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <div class="hero-shell">
+    <section class="container hero">
+      <div class="hero-text">
+        <span class="eyebrow eyebrow-pill">A tua voz pode levar-te mais longe</span>
+        <h1>Sabes o que queres dizer. <span class="gradient-text">Agora aprende a fazer com que isso seja ouvido.</span></h1>
+        <p class="hero-copy">A Pheddie transforma a comunicação numa competência que podes praticar todos os dias: fala, recebe feedback inteligente, melhora, acompanha a tua evolução e constrói uma reputação que pode acompanhar-te até às próximas oportunidades.</p>
+        <div class="hero-actions"><a class="btn btn-primary" href="#espera">Quero entrar na Pheddie <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="#como-funciona">Ver como funciona</a></div>
+        <p class="micro-proof"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Pré-lançamento em Angola · 10% de desconto para os primeiros membros</p>
+      </div>
+      <div class="visual" role="group" aria-label="Pré-visualização do feedback de comunicação da Pheddie">
+        <div class="app-stack">
+          <div class="app-card">
+            <div class="app-top"><div><div class="app-label">Desafio concluído</div><div class="app-title">“Porque devemos <span style="white-space:nowrap">contratar-te?”</span></div></div><div class="score"><span data-count="82">82</span><small>/100</small></div></div>
+            <div class="wave" aria-hidden="true"><span class="wave-play"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></span><div class="wave-bars"><i class="on" style="--h:0.39;--i:0"></i><i class="on" style="--h:0.45;--i:1"></i><i class="on" style="--h:0.55;--i:2"></i><i class="on" style="--h:0.85;--i:3"></i><i class="on" style="--h:0.84;--i:4"></i><i class="on" style="--h:0.69;--i:5"></i><i class="on" style="--h:0.66;--i:6"></i><i class="on" style="--h:0.44;--i:7"></i><i class="on" style="--h:0.74;--i:8"></i><i class="on" style="--h:0.51;--i:9"></i><i class="on" style="--h:0.86;--i:10"></i><i class="on" style="--h:0.60;--i:11"></i><i class="on" style="--h:0.45;--i:12"></i><i class="on" style="--h:0.34;--i:13"></i><i class="on" style="--h:0.36;--i:14"></i><i class="on" style="--h:0.73;--i:15"></i><i class="on" style="--h:0.24;--i:16"></i><i class="on" style="--h:0.59;--i:17"></i><i class="on" style="--h:0.25;--i:18"></i><i class="on" style="--h:0.24;--i:19"></i><i class="on" style="--h:0.43;--i:20"></i><i class="on" style="--h:0.41;--i:21"></i><i class="on" style="--h:0.69;--i:22"></i><i class="on" style="--h:0.23;--i:23"></i><i class="on" style="--h:0.39;--i:24"></i><i class="on" style="--h:0.28;--i:25"></i><i class="on" style="--h:0.60;--i:26"></i><i style="--h:0.64;--i:27"></i><i style="--h:0.66;--i:28"></i><i style="--h:0.72;--i:29"></i><i style="--h:0.43;--i:30"></i><i style="--h:0.55;--i:31"></i><i style="--h:0.49;--i:32"></i><i style="--h:0.94;--i:33"></i><i style="--h:0.73;--i:34"></i><i style="--h:0.73;--i:35"></i><i style="--h:0.55;--i:36"></i><i style="--h:0.50;--i:37"></i><i style="--h:0.81;--i:38"></i><i style="--h:0.41;--i:39"></i><i style="--h:0.88;--i:40"></i><i style="--h:0.47;--i:41"></i><i style="--h:0.40;--i:42"></i><i style="--h:0.40;--i:43"></i></div><span class="wave-time">0:58</span></div>
+            <div class="metric"><span>Clareza</span><div class="bar"><div class="fill" style="--w:86%;--k:0"></div></div><span data-count="86">86</span></div>
+            <div class="metric"><span>Estrutura</span><div class="bar"><div class="fill" style="--w:79%;--k:1"></div></div><span data-count="79">79</span></div>
+            <div class="metric"><span>Ritmo</span><div class="bar"><div class="fill" style="--w:84%;--k:2"></div></div><span data-count="84">84</span></div>
+            <div class="feedback"><strong>Feedback da Pheddie</strong><br>A tua resposta transmite confiança. Agora, começa pela tua principal competência e torna o primeiro minuto impossível de ignorar.</div>
+          </div>
+        </div>
+        <div class="floating-note"><span class="dot"></span> A tua evolução é acompanhada, não adivinhada</div>
+      </div>
+    </section>
+    </div>
+
+    <section class="container flush-top">
+      <div class="section-heading">
+        <span class="eyebrow">Reconhece-te nisto?</span>
+        <h2>Ter conhecimento não garante que consigas transmiti-lo.</h2>
+        <p>Podes ser inteligente, ter boas ideias e dominar aquilo que fazes. Mas numa entrevista, apresentação, reunião ou conversa importante, a forma como comunicas pode mudar completamente a forma como essas capacidades são percebidas.</p>
+        <p><strong>E comunicação não melhora apenas a pensar sobre ela. Melhora quando praticas.</strong></p>
+      </div>
+
+      <div class="pain-grid">
+        <article class="card">
+          <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 20.5c-1.5 0-3-.5-4-1.5l-4-4 2-2 3.5 3.5 9-9 2 2-10 10c-.5.5-1.5 1-2.5 1z"/></svg></div>
+          <h3>Tens boas ideias.</h3>
+          <p>Mas nem sempre consegues organizá-las e explicá-las com a clareza que gostarias.</p>
+        </article>
+
+        <article class="card">
+          <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>O momento chega.</h3>
+          <p>Uma entrevista, uma apresentação ou uma oportunidade para falar — e a pressão muda tudo.</p>
+        </article>
+
+        <article class="card card-accent">
+          <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>Depois pensas na resposta perfeita.</h3>
+          <p>A Pheddie existe para que possas praticar antes de o próximo momento importante chegar.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="dark-band">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">O método Pheddie</span>
+          <h2>Não estudes apenas comunicação. <span class="gradient-text">Pratica-a.</span></h2>
+          <p>A Pheddie transforma situações que normalmente só aparecem quando realmente precisas delas em oportunidades de treino. Quanto mais praticas, mais informação tens sobre aquilo que estás a fazer bem e aquilo que ainda podes melhorar.</p>
+        </div>
+
+        <div class="flow">
+          <article class="flow-step"><span class="step-number">01</span><h3>Fala</h3><p>Recebe um desafio baseado numa situação real.</p></article>
+          <article class="flow-step"><span class="step-number">02</span><h3>Recebe feedback</h3><p>A tua resposta é analisada e recebes orientação específica sobre como melhorar.</p></article>
+          <article class="flow-step"><span class="step-number">03</span><h3>Tenta novamente</h3><p>Aplica o feedback e percebe a diferença entre a primeira e a nova resposta.</p></article>
+          <article class="flow-step"><span class="step-number">04</span><h3>Acompanha</h3><p>Vê a tua evolução através das competências que estás a desenvolver.</p></article>
+          <article class="flow-step"><span class="step-number">05</span><h3>Constrói reputação</h3><p>Sobe de nível, conquista marcos e torna o teu desenvolvimento visível.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="section-heading">
+        <span class="eyebrow">Porque este método?</span>
+        <h2>Prática + feedback + repetição não é apenas uma ideia bonita.</h2>
+        <p>A Pheddie está a ser construída sobre princípios estudados de aprendizagem, feedback e treino de comunicação. Estes dados vêm de investigação externa — não são resultados da Pheddie.</p>
+      </div>
+
+      <div class="evidence-grid">
+        <article class="evidence-card">
+          <div class="evidence-stat"><div class="evidence-number" data-count="40">40</div><div class="evidence-label">estudos</div></div>
+          <h3>Feedback que orienta</h3>
+          <p>Uma meta-análise analisou 40 estudos sobre feedback em ambientes digitais e encontrou melhores resultados para feedback elaborado, que explica e orienta, do que para simples indicação de certo ou errado.</p>
+          <span class="evidence-source">Meta-análise · SAGE Journals</span>
+        </article>
+
+        <article class="evidence-card">
+          <div class="evidence-stat"><div class="evidence-number" data-count="39">39</div><div class="evidence-label">estudantes</div></div>
+          <h3>Treino estruturado</h3>
+          <p>Um ensaio controlado acompanhou estudantes durante seis semanas de treino de comunicação e encontrou melhorias em avaliações de apresentação e na perceção dos próprios participantes.</p>
+          <span class="evidence-source">Ensaio controlado · PubMed</span>
+        </article>
+
+        <article class="evidence-card">
+          <div class="evidence-stat"><div class="evidence-number" data-count="26">26</div><div class="evidence-label">estudos</div></div>
+          <h3>Prática e exposição</h3>
+          <p>Uma revisão e meta-análise recente reuniu 26 estudos e 2.253 participantes para analisar intervenções relacionadas com ansiedade de falar em público.</p>
+          <span class="evidence-source">Revisão e meta-análise · PubMed</span>
+        </article>
+      </div>
+
+      <div class="evidence-summary">
+        <strong>O princípio é simples:</strong>
+        praticar dá-te experiência, feedback mostra-te o que ajustar e a repetição permite transformar informação em competência.
+      </div>
+
+      <p class="evidence-note">A Pheddie não promete resultados milagrosos. Está a transformar princípios estudados de prática, feedback e exposição numa experiência digital contínua.</p>
+    </section>
+
+    <section class="container flush-top">
+      <div class="split">
+        <div class="split-copy">
+          <span class="eyebrow">A tua área de evolução</span>
+          <h2>Não vais apenas treinar. <span class="gradient-text">Vais conseguir ver quem estás a tornar-te.</span></h2>
+          <p>O teu perfil começa com aquilo que estás a construir. A tua profissão, área de formação ou curso ajudam a contextualizar a tua evolução.</p>
+          <p>Depois vêm os desafios, os resultados, os níveis, os marcos e as competências que vais desenvolvendo.</p>
+        </div>
+
+        <div class="feature-list">
+          <article class="feature-row">
+            <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div><h3>Desenvolve competências</h3><p>Clareza, estrutura, persuasão, improvisação, entrevistas, apresentações, vendas e muito mais.</p></div>
+          </article>
+
+          <article class="feature-row">
+            <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+            <div><h3>Constrói o teu perfil</h3><p>Mostra quem és, o que estás a estudar ou a fazer e as competências que estás a desenvolver.</p></div>
+          </article>
+
+          <article class="feature-row">
+            <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2l3 6 6 .9-4.5 4.4 1.1 6.2L12 16.5 6.4 19.5l1.1-6.2L3 8.9 9 8z"/></svg></div>
+            <div><h3>Cria marcos</h3><p>Os teus melhores momentos podem tornar-se parte da tua história dentro da comunidade.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dark-band">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Uma comunidade onde podes ser descoberto</span>
+          <h2>Não precisas ser o melhor para ter o teu momento.</h2>
+          <p>Na Pheddie, reconhecimento não precisa significar apenas “número 1”. Uma grande evolução, uma excelente estreia, uma sequência impressionante ou uma performance memorável podem colocar-te em destaque.</p>
+          <p><strong>Até quem entrou há três dias pode ter uma razão para aparecer ao lado de quem já está há meses.</strong></p>
+        </div>
+
+        <div class="pain-grid">
+          <article class="card">
+            <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l2.8 5.7L21 9.6l-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/></svg></div>
+            <h3>Os teus destaques</h3>
+            <p>Conquistas e performances que mostram mais do que um simples número.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 21a6 6 0 0 1 12 0M10 21a6 6 0 0 1 12 0"/></svg></div>
+            <h3>As tuas conexões</h3>
+            <p>Conhece pessoas com interesses, áreas e objetivos que fazem sentido para ti.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div>
+            <h3>As tuas oportunidades</h3>
+            <p>À medida que a Pheddie cresce, o teu perfil pode tornar-se uma forma de apresentar aquilo que sabes fazer.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="container manifesto">
+      <div class="section-heading">
+        <span class="eyebrow">O que estamos a construir</span>
+        <h2>Imagina seres descoberto pelo que estás a construir.</h2>
+        <p>Hoje, talvez estejas a estudar. Amanhã, podes estar a candidatar-te ao teu primeiro emprego. Depois, a liderar uma equipa, vender uma ideia, apresentar um projeto ou construir uma empresa.</p>
+        <p>A Pheddie quer acompanhar essa evolução e dar-lhe contexto.</p>
+        <p class="pull"><strong>Porque uma pessoa que desenvolve competências merece mais do que uma pontuação. Merece ser vista.</strong></p>
+      </div>
+    </section>
+
+    <section class="container flush-top">
+      <div class="section-heading">
+        <span class="eyebrow">Muito mais do que oratória</span>
+        <h2>Treina a comunicação que a tua próxima oportunidade vai exigir.</h2>
+        <p>O treino começa na fala, mas pode levar-te muito mais longe.</p>
+      </div>
+
+      <div class="category-grid">
+        <article class="card category-card">
+          <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <h3>Vendas &amp; Persuasão</h3>
+          <p>Aprende a apresentar valor, responder a objeções e defender uma ideia.</p>
+        </article>
+
+        <article class="card category-card">
+          <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+          <h3>Entrevistas &amp; Apresentações</h3>
+          <p>Pratica respostas difíceis, apresentações e comunicação sob pressão.</p>
+        </article>
+
+        <article class="card category-card">
+          <div class="icon"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M1 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3>Liderança &amp; Influência</h3>
+          <p>Comunica com equipas, conduz conversas e aprende a fazer as tuas ideias avançarem.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="faq" class="container faq-section flush-top" aria-labelledby="faq-heading"><div class="section-heading"><span class="eyebrow">Dúvidas frequentes</span><h2 id="faq-heading">Tudo o que precisas de saber antes de entrar.</h2><p>Respostas rápidas para as perguntas mais importantes sobre a Pheddie e o lançamento.</p></div><div class="faq-accordion"><details><summary>O que é exatamente a Pheddie?</summary><p>A Pheddie é uma plataforma digital para treinar e melhorar diferentes tipos de comunicação através de desafios práticos e feedback inteligente.</p></details><details><summary>Como vou receber o acesso?</summary><p>Os membros da lista de espera serão contactados por email e WhatsApp com prioridade quando o acesso estiver disponível.</p></details><details><summary>O acesso à lista de espera é gratuito?</summary><p>Sim. Entrar na lista de espera é totalmente gratuito e garante 10% de desconto no primeiro mês do plano profissional.</p></details><details><summary>Quando é o lançamento oficial em Angola?</summary><p>Brevemente, com acesso faseado para os primeiros inscritos na lista de espera.</p></details></div></section>
+
+    <section id="espera" class="container capture">
+      <div class="capture-box">
+        <div class="capture-copy">
+          <span class="eyebrow">A Pheddie está a chegar</span>
+          <h2>Começa antes dos outros.</h2>
+          <p>Entra na lista de espera e sê um dos primeiros a experimentar uma nova forma de treinar comunicação, acompanhar a tua evolução e construir a tua presença dentro de uma comunidade feita para quem quer ir mais longe.</p>
+          <p><strong>Os primeiros membros recebem 10% de desconto no primeiro mês do plano Profissional após o lançamento em Angola.</strong></p>
+          <p class="benefit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg> Sem spam. Apenas novidades sobre o lançamento e o teu acesso à Pheddie.</p>
+        </div>
+
+        <form class="lead-form" action="https://formspree.io/f/mdekejwl" method="POST" novalidate>
+          <div class="step-progress" aria-hidden="true"><span class="step-counter">Passo 1 de 6</span><div class="progress-track"><div class="progress-fill"></div></div><span class="step-label">Sobre ti</span></div>
+
+          <div class="form-step is-active" data-step="1" data-label="Sobre ti">
+            <div class="field"><label for="nome">Como te chamas?</label><input id="nome" name="nome" type="text" autocomplete="name" placeholder="O teu nome completo" required></div>
+            <div class="field"><label for="email">Qual é o teu melhor email?</label><input id="email" name="email" type="email" autocomplete="email" placeholder="o-teu-melhor@email.com" required></div>
+            <button class="btn btn-primary next-step" type="button">Seguinte <span aria-hidden="true">→</span></button>
+          </div>
+
+          <div class="form-step" data-step="2" data-label="Contacto">
+            <div class="field"><label for="whatsapp">Qual é o teu WhatsApp?</label><input id="whatsapp" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" placeholder="Ex.: +244 900 000 000" required></div>
+            <div class="step-actions"><button class="btn btn-back prev-step" type="button">Voltar</button><button class="btn btn-primary next-step" type="button">Seguinte <span aria-hidden="true">→</span></button></div>
+          </div>
+
+          <div class="form-step" data-step="3" data-label="Perfil">
+            <div class="field"><label for="profissao_area">Qual é a tua profissão ou área de estudo?</label><input id="profissao_area" name="profissao_area" type="text" autocomplete="organization-title" placeholder="Ex.: Marketing, Direito, Engenharia…" required></div>
+            <div class="step-actions"><button class="btn btn-back prev-step" type="button">Voltar</button><button class="btn btn-primary next-step" type="button">Seguinte <span aria-hidden="true">→</span></button></div>
+          </div>
+
+          <div class="form-step" data-step="4" data-label="Objetivo">
+            <div class="field"><label for="principal_objetivo">O que gostarias de alcançar com a Pheddie?</label><select id="principal_objetivo" name="principal_objetivo" required><option value="" selected disabled>Seleciona uma opção</option><option value="melhorar_entrevistas">Preparar-me melhor para entrevistas</option><option value="falar_em_publico">Falar melhor em público e apresentações</option><option value="vendas_persuasao">Melhorar vendas, persuasão e negociação</option><option value="lideranca">Comunicar melhor como líder</option><option value="clareza_confianca">Ganhar clareza e confiança a comunicar</option><option value="desenvolvimento_geral">Desenvolver a minha comunicação de forma geral</option></select></div>
+            <div class="step-actions"><button class="btn btn-back prev-step" type="button">Voltar</button><button class="btn btn-primary next-step" type="button">Seguinte <span aria-hidden="true">→</span></button></div>
+          </div>
+
+          <div class="form-step" data-step="5" data-label="Prática">
+            <div class="field"><label for="frequencia_comunicacao">Com que frequência falas em público ou comunicas profissionalmente?</label><select id="frequencia_comunicacao" name="frequencia_comunicacao" required><option value="" selected disabled>Seleciona uma opção</option><option value="diariamente">Diariamente</option><option value="varias_vezes_semana">Várias vezes por semana</option><option value="algumas_vezes_mes">Algumas vezes por mês</option><option value="raramente">Raramente</option><option value="quase_nunca">Quase nunca</option></select></div>
+            <div class="step-actions"><button class="btn btn-back prev-step" type="button">Voltar</button><button class="btn btn-primary next-step" type="button">Seguinte <span aria-hidden="true">→</span></button></div>
+          </div>
+
+          <div class="form-step" data-step="6" data-label="Último passo">
+            <div class="field"><p class="field-label" id="lbl-preco">Quanto pagarias por mês para utilizar a Pheddie?</p><div class="choice-grid" role="radiogroup" aria-labelledby="lbl-preco"><div class="choice"><input id="preco_2000" name="preco_mensal" type="radio" value="2000 Kz" required><label for="preco_2000">2 000 Kz por mês</label></div><div class="choice"><input id="preco_5000" name="preco_mensal" type="radio" value="5000 Kz"><label for="preco_5000">5 000 Kz por mês</label></div><div class="choice"><input id="preco_10000" name="preco_mensal" type="radio" value="10 000 Kz"><label for="preco_10000">10 000 Kz por mês</label></div></div></div>
+            <div class="field"><p class="field-label" id="lbl-teste">Gostarias de testar gratuitamente?</p><div class="choice-grid" role="radiogroup" aria-labelledby="lbl-teste"><div class="choice"><input id="teste_sim" name="teste_gratuito" type="radio" value="Sim" required><label for="teste_sim">Sim, gostaria de testar</label></div><div class="choice"><input id="teste_nao" name="teste_gratuito" type="radio" value="Não tenho a certeza"><label for="teste_nao">Não tenho a certeza</label></div></div></div>
+            <input type="hidden" name="origem" value="Lista de espera Pheddie">
+            <div class="hp" aria-hidden="true"><label>Não preencher <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label></div>
+            <div class="step-actions"><button class="btn btn-back prev-step" type="button">Voltar</button><button class="btn btn-primary" type="submit">Quero entrar na Pheddie <span aria-hidden="true">→</span></button></div>
+          </div>
+          <p class="fine-print">Ao submeter, concordas em receber novidades da Pheddie.</p>
+          <p class="form-status" role="status" aria-live="polite"></p>
+
+          <div class="form-success" tabindex="-1">
+            <div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+            <h3>Está feito.</h3>
+            <p>O teu lugar na lista de espera ficou registado.</p>
+            <p>Vamos contactar-te por email e WhatsApp quando o teu acesso estiver disponível.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+  <footer>
+    <div class="container footer-inner">
+      <div><span>© 2026 Pheddie. Train. Connect. Grow.</span><div class="legal-links" role="group" aria-label="Informações legais"><button class="legal-link" type="button" data-modal-open="privacy-modal">Política de privacidade</button><button class="legal-link" type="button" data-modal-open="terms-modal">Termos de utilização</button></div></div>
+      <a href="#espera">Entrar na lista de espera ↑</a>
+    </div>
+  </footer>
+
+  <dialog class="modal" id="privacy-modal" aria-labelledby="privacy-title"><div class="modal-panel"><button class="modal-close" type="button" data-modal-close aria-label="Fechar">×</button><div class="modal-scroll"><span class="eyebrow">Informação legal</span><h2 id="privacy-title">Política de privacidade</h2><p>A Pheddie recolhe apenas os dados que decides enviar através da lista de espera, como nome, email, WhatsApp, profissão ou área de estudo, objetivos, frequência de comunicação, faixa de preço e interesse em testar gratuitamente.</p><h3>Para que utilizamos os teus dados?</h3><p>Utilizamos estes dados para gerir a lista de espera, compreender melhor as necessidades dos futuros membros e contactar-te sobre o lançamento, o acesso à plataforma e oportunidades relacionadas com a Pheddie.</p><h3>Como poderás ser contactado?</h3><p>Poderemos contactar-te através do email e do WhatsApp fornecidos no formulário. Não vendemos os teus dados pessoais a terceiros. Os dados são processados através do serviço de formulários Formspree e utilizados apenas para as finalidades descritas nesta página.</p><h3>Os teus direitos</h3><p>Podes pedir a correção ou remoção dos teus dados a qualquer momento através do canal de contacto utilizado pela Pheddie. Ao entrares na lista, concordas com esta utilização informada dos dados.</p></div></div></dialog>
+
+  <dialog class="modal" id="terms-modal" aria-labelledby="terms-title"><div class="modal-panel"><button class="modal-close" type="button" data-modal-close aria-label="Fechar">×</button><div class="modal-scroll"><span class="eyebrow">Informação legal</span><h2 id="terms-title">Termos de utilização</h2><p>Ao submeteres o formulário, estás a solicitar a entrada na lista de espera da Pheddie. O acesso à lista de espera não garante, por si só, acesso imediato à plataforma, uma vaga específica ou uma data individual de lançamento.</p><h3>Comunicações</h3><p>Os contactos inscritos poderão receber atualizações sobre o desenvolvimento, o lançamento e o acesso faseado à Pheddie através do email e do WhatsApp fornecidos.</p><h3>Benefício de lançamento</h3><p>A entrada na lista de espera é gratuita e garante a elegibilidade para 10% de desconto no primeiro mês do plano profissional, conforme as condições comunicadas no lançamento oficial.</p><h3>Atualizações</h3><p>As funcionalidades, condições comerciais e calendário de acesso poderão ser atualizados antes do lançamento. Qualquer alteração relevante será comunicada aos inscritos pelos canais disponíveis.</p></div></div></dialog>
+
+<script>
+(function(){
+  'use strict';
+
+  var root=document.documentElement;
+  var animated=root.classList.contains('js'); /* JS ativo + movimento permitido */
+  var $=function(sel,ctx){return (ctx||document).querySelector(sel);};
+  var $$=function(sel,ctx){return Array.prototype.slice.call((ctx||document).querySelectorAll(sel));};
+  var clamp=function(n,min,max){return Math.min(max,Math.max(min,n));};
+
+  /* ------------------------------------------------------------
+     1. Contagem animada de números
+     ------------------------------------------------------------ */
+  function countUp(el,delay){
+    var target=parseFloat(el.getAttribute('data-count'));
+    var duration=1100;
+    el.textContent='0';
+    setTimeout(function(){
+      var start=performance.now();
+      (function tick(now){
+        var p=clamp((now-start)/duration,0,1);
+        el.textContent=Math.round(target*(1-Math.pow(1-p,3)));
+        if(p<1)requestAnimationFrame(tick);
+      })(start);
+    },delay||0);
+  }
+
+  /* ------------------------------------------------------------
+     2. Header: sombra + barra de progresso + linha do tempo do método
+     ------------------------------------------------------------ */
+  var header=$('.site-header');
+  var flow=$('.flow');
+  var flowSteps=flow?$$('.flow-step',flow):[];
+
+  function updateFlow(){
+    if(!flow||!animated)return;
+    var r=flow.getBoundingClientRect();
+    var vh=window.innerHeight;
+    var span=Math.max(r.height,vh*0.4);
+    var p=clamp((vh*0.72-r.top)/span,0,1);
+    var total=flowSteps.length-1;
+    flowSteps.forEach(function(step,i){
+      step.style.setProperty('--seg',clamp(p*total-i,0,1).toFixed(3));
+      step.classList.toggle('is-lit',p>0.01&&p*total>=i-0.1);
+    });
+  }
+
+  var ticking=false;
+  function onScroll(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      var y=window.scrollY||window.pageYOffset;
+      var max=root.scrollHeight-window.innerHeight;
+      header.classList.toggle('is-scrolled',y>8);
+      header.style.setProperty('--progress',max>0?clamp(y/max,0,1).toFixed(4):0);
+      updateFlow();
+      ticking=false;
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  onScroll();
+
+  /* ------------------------------------------------------------
+     3. Announcement bar — rolagem contínua sem "saltos"
+     ------------------------------------------------------------ */
+  var bar=$('.announcement');
+  if(bar){
+    var track=$('.announcement-track',bar);
+    var unitHTML=$('.announcement-group',bar).innerHTML;
+    var SPEED=55; /* px por segundo */
+    var lastWidth=0;
+
+    var buildMarquee=function(){
+      track.innerHTML='';
+      var group=document.createElement('div');
+      group.className='announcement-group';
+      group.innerHTML=unitHTML;
+      track.appendChild(group);
+      bar.classList.add('is-ready');
+
+      /* repete o texto até o grupo ser mais largo que o ecrã */
+      var guard=0;
+      while(group.getBoundingClientRect().width<window.innerWidth&&guard<14){
+        group.insertAdjacentHTML('beforeend',unitHTML);
+        guard++;
+      }
+      $$('.announcement-unit',group).forEach(function(unit,i){
+        if(i>0)unit.setAttribute('aria-hidden','true');
+      });
+
+      /* segundo grupo idêntico: o -50% da animação fica contínuo */
+      var clone=group.cloneNode(true);
+      clone.setAttribute('aria-hidden','true');
+      track.appendChild(clone);
+
+      track.style.setProperty('--marquee-duration',(group.getBoundingClientRect().width/SPEED).toFixed(1)+'s');
+      lastWidth=window.innerWidth;
+    };
+
+    buildMarquee();
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(buildMarquee);
+    var resizeTimer;
+    window.addEventListener('resize',function(){
+      clearTimeout(resizeTimer);
+      resizeTimer=setTimeout(function(){if(window.innerWidth!==lastWidth)buildMarquee();},200);
+    });
+  }
+
+  /* ------------------------------------------------------------
+     4. Animações ao fazer scroll
+     ------------------------------------------------------------ */
+  if(animated){
+    var targets=[];
+
+    /* Grupos: cada filho entra com um pequeno atraso */
+    $$('.section-heading,.pain-grid,.category-grid,.evidence-grid,.flow,.feature-list').forEach(function(group){
+      Array.prototype.forEach.call(group.children,function(child,i){
+        child.classList.add('reveal');
+        child.style.setProperty('--d',Math.min(i,5)*90+'ms');
+        targets.push(child);
+      });
+    });
+
+    /* Blocos individuais */
+    $$('.evidence-summary,.evidence-note,.capture-box,.faq-accordion').forEach(function(el){
+      el.classList.add('reveal');
+      targets.push(el);
+    });
+
+    /* Números que contam quando entram no ecrã */
+    $$('.evidence-number').forEach(function(n){n.textContent='0';});
+
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(!entry.isIntersecting)return;
+        var el=entry.target;
+        var delay=parseInt(el.style.getPropertyValue('--d'),10)||0;
+        el.classList.add('is-visible');
+        observer.unobserve(el);
+        $$('[data-count]',el).forEach(function(n){countUp(n,delay+250);});
+        /* Depois da entrada, devolve o elemento ao seu estado normal
+           para que os efeitos de hover não fiquem lentos. */
+        setTimeout(function(){
+          el.classList.remove('reveal','is-visible');
+          el.style.removeProperty('--d');
+        },delay+1100);
+      });
+    },{threshold:0.12,rootMargin:'0px 0px -6% 0px'});
+
+    targets.forEach(function(el){observer.observe(el);});
+
+    /* Sequência de entrada do hero: waveform → pontuação → barras → feedback */
+    var visual=$('.visual');
+    if(visual){
+      $$('[data-count]',visual).forEach(function(n){n.textContent='0';});
+      requestAnimationFrame(function(){requestAnimationFrame(function(){
+        visual.classList.add('is-live');
+        $$('[data-count]',visual).forEach(function(n){countUp(n,700);});
+      });});
+    }
+
+    /* Se alguém imprimir a página, mostra os números finais */
+    window.addEventListener('beforeprint',function(){
+      $$('[data-count]').forEach(function(n){n.textContent=n.getAttribute('data-count');});
+    });
+  }
+
+  /* ------------------------------------------------------------
+     5. Formulário em passos
+     Correção: a validação era feita sobre a <div> do passo, que não
+     tem checkValidity(). Agora valida cada campo individualmente.
+     ------------------------------------------------------------ */
+  var form=$('.lead-form');
+  var steps=$$('.form-step',form);
+  var counter=$('.step-counter',form);
+  var stepLabel=$('.step-label',form);
+  var progress=$('.progress-fill',form);
+  var statusEl=$('.form-status',form);
+  var success=$('.form-success',form);
+  var currentStep=0;
+
+  var rules={
+    nome:function(v){return v.length>=2?'':'Escreve o teu nome.';},
+    email:function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)?'':'Introduz um email válido, por exemplo nome@email.com.';},
+    whatsapp:function(v){
+      var digits=v.replace(/\D/g,'');
+      return /^[+\d\s().-]+$/.test(v)&&digits.length>=9&&digits.length<=15?'':'Introduz um número de WhatsApp válido, por exemplo +244 900 000 000.';
+    },
+    profissao_area:function(v){return v.length>=2?'':'Indica a tua profissão ou área de estudo.';}
+  };
+
+  function clearError(field){
+    var err=$('.field-error',field);
+    if(err)err.remove();
+    field.classList.remove('has-error');
+    $$('input,select',field).forEach(function(c){c.removeAttribute('aria-invalid');c.removeAttribute('aria-describedby');});
+  }
+
+  function setError(field,control,message){
+    clearError(field);
+    if(!message)return;
+    var err=document.createElement('p');
+    err.className='field-error';
+    err.id='err-'+(control.name||control.id);
+    err.textContent=message;
+    field.appendChild(err);
+    field.classList.add('has-error');
+    control.setAttribute('aria-invalid','true');
+    control.setAttribute('aria-describedby',err.id);
+  }
+
+  function validateStep(index){
+    var step=steps[index];
+    var firstInvalid=null;
+
+    $$('input:not([type="hidden"]):not([type="radio"]):not([name="_gotcha"]),select',step).forEach(function(el){
+      var value=el.value.trim();
+      if(el.tagName==='INPUT')el.value=value;
+      var message='';
+      if(rules[el.name])message=rules[el.name](value);
+      else if(!value)message=el.tagName==='SELECT'?'Seleciona uma opção.':'Preenche este campo.';
+      setError(el.closest('.field'),el,message);
+      if(message&&!firstInvalid)firstInvalid=el;
+    });
+
+    var radioNames=[];
+    $$('input[type="radio"]',step).forEach(function(r){if(radioNames.indexOf(r.name)===-1)radioNames.push(r.name);});
+    radioNames.forEach(function(name){
+      var group=$$('input[type="radio"][name="'+name+'"]',step);
+      var ok=group.some(function(r){return r.checked;});
+      setError(group[0].closest('.field'),group[0],ok?'':'Escolhe uma opção para continuar.');
+      if(!ok&&!firstInvalid)firstInvalid=group[0];
+    });
+
+    if(firstInvalid)firstInvalid.focus();
+    return !firstInvalid;
+  }
+
+  function showStep(index,dir,noFocus){
+    form.style.setProperty('--dir',dir||1);
+    currentStep=index;
+    steps.forEach(function(step,i){step.classList.toggle('is-active',i===index);});
+    counter.textContent='Passo '+(index+1)+' de '+steps.length;
+    stepLabel.textContent=steps[index].getAttribute('data-label')||'';
+    progress.style.width=((index+1)/steps.length*100)+'%';
+    var first=$('input:not([type="hidden"]):not([type="radio"]):not([name="_gotcha"]),select',steps[index]);
+    if(first&&!noFocus)setTimeout(function(){first.focus({preventScroll:true});},80);
+  }
+
+  function goNext(){
+    if(!validateStep(currentStep))return;
+    showStep(Math.min(currentStep+1,steps.length-1),1);
+  }
+
+  $$('.next-step',form).forEach(function(btn){btn.addEventListener('click',goNext);});
+  $$('.prev-step',form).forEach(function(btn){btn.addEventListener('click',function(){showStep(Math.max(currentStep-1,0),-1);});});
+
+  /* Enter num campo avança o passo em vez de submeter o formulário a meio */
+  form.addEventListener('keydown',function(e){
+    if(e.key!=='Enter'||e.target.tagName!=='INPUT'||e.target.type==='radio')return;
+    e.preventDefault();
+    if(currentStep<steps.length-1)goNext();
+    else form.requestSubmit();
+  });
+
+  /* Limpa o erro assim que a pessoa corrige o campo */
+  function onFieldChange(e){
+    var field=e.target.closest&&e.target.closest('.field');
+    if(field&&field.classList.contains('has-error'))clearError(field);
+  }
+  form.addEventListener('input',onFieldChange);
+  form.addEventListener('change',onFieldChange);
+
+  form.addEventListener('submit',function(event){
+    event.preventDefault();
+    if(currentStep<steps.length-1){goNext();return;}
+
+    /* Valida todos os passos antes de enviar */
+    for(var i=0;i<steps.length;i++){
+      if(!validateStep(i)){
+        if(i!==currentStep){showStep(i,-1,true);validateStep(i);}
+        return;
+      }
+    }
+
+    var submitButton=$('button[type="submit"]',form);
+    submitButton.disabled=true;
+    submitButton.textContent='A enviar…';
+    statusEl.className='form-status';
+    statusEl.textContent='';
+
+    fetch(form.action,{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}})
+      .then(function(response){
+        if(!response.ok)throw new Error('submission_failed');
+        form.reset();
+        form.classList.add('is-done');
+        success.focus({preventScroll:true});
+      })
+      .catch(function(){
+        statusEl.className='form-status error';
+        statusEl.textContent='Não foi possível enviar agora. Tenta novamente dentro de instantes.';
+        submitButton.disabled=false;
+        submitButton.innerHTML='Quero entrar na Pheddie <span aria-hidden="true">→</span>';
+      });
+  });
+
+  /* ------------------------------------------------------------
+     6. Modais (<dialog> nativo)
+     Sem saltos de layout: o scroll é bloqueado no <html> e a
+     "scrollbar-gutter: stable" mantém a largura da página igual.
+     ------------------------------------------------------------ */
+  var lastTrigger=null;
+  var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function openModal(dialog,trigger){
+    lastTrigger=trigger;
+    if(typeof dialog.showModal==='function')dialog.showModal();
+    else dialog.setAttribute('open','');
+    root.classList.add('modal-open');
+    var scroller=$('.modal-scroll',dialog);
+    if(scroller)scroller.scrollTop=0;
+  }
+
+  function closeModal(dialog){
+    if(!dialog.open||dialog.classList.contains('is-closing'))return;
+    var finish=function(){
+      if(typeof dialog.close==='function')dialog.close();
+      else dialog.removeAttribute('open');
+      dialog.classList.remove('is-closing');
+    };
+    if(reduceMotion){finish();return;}
+    dialog.classList.add('is-closing');
+    setTimeout(finish,200);
+  }
+
+  $$('.modal').forEach(function(dialog){
+    dialog.addEventListener('close',function(){
+      root.classList.remove('modal-open');
+      if(lastTrigger)lastTrigger.focus({preventScroll:true});
+    });
+    dialog.addEventListener('cancel',function(e){e.preventDefault();closeModal(dialog);}); /* ESC */
+    dialog.addEventListener('click',function(e){if(e.target===dialog)closeModal(dialog);}); /* clique fora */
+    $('[data-modal-close]',dialog).addEventListener('click',function(){closeModal(dialog);});
+  });
+
+  $$('[data-modal-open]').forEach(function(trigger){
+    trigger.addEventListener('click',function(){
+      openModal(document.getElementById(trigger.getAttribute('data-modal-open')),trigger);
+    });
+  });
+})();
+</script>
+</body>
+</html>
