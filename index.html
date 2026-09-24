@@ -75,7 +75,7 @@
         <h1>Sabes o que queres dizer. <span class="gradient-text">Agora aprende a fazer com que isso seja ouvido.</span></h1>
         <p class="hero-copy">A Pheddie transforma a comunicação numa competência que podes praticar todos os dias: fala, recebe feedback inteligente, melhora, acompanha a tua evolução e constrói uma reputação que pode acompanhar-te até às próximas oportunidades.</p>
         <div class="hero-actions"><a class="btn btn-primary" href="#espera">Quero entrar na Pheddie <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="#como-funciona">Ver como funciona</a></div>
-        <p class="micro-proof"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg> Pré-lançamento em Angola · 10% de desconto para os primeiros membros</p>
+        <p class="micro-proof"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg> Pré-lançamento · 10% de desconto para os primeiros membros</p>
       </div>
       <div class="visual" aria-label="Pré-visualização do feedback de comunicação da Pheddie">
         <div class="app-card"><div class="app-top"><div><div class="app-label">Desafio concluído</div><div class="app-title">“Porque devemos contratar-te?”</div></div><div class="score">82<small>/100</small></div></div>
@@ -282,7 +282,7 @@
       <h2>Começa antes dos outros.</h2>
       <p>Entra na lista de espera e sê um dos primeiros a experimentar uma nova forma de treinar comunicação, acompanhar a tua evolução e construir a tua presença dentro de uma comunidade feita para quem quer ir mais longe.</p>
       <p><strong>Os primeiros membros recebem 10% de desconto no primeiro mês do plano Profissional após o lançamento em Angola.</strong></p>
-      <p class="benefit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg> Sem spam. Apenas novidades sobre o lançamento e o teu acesso à Pheddie.</p>
+      <p class="benefit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg> Sem spam. Apenas novidades sobre o lançamento.</p>
     </div>
 
     <form class="lead-form" action="https://formspree.io/f/mdekejwl" method="POST" novalidate>
@@ -353,11 +353,17 @@
       if(firstField) setTimeout(()=>firstField.focus(),80);
     }
 
-    form.querySelectorAll('.next-step').forEach(button=>button.addEventListener('click',()=>{
-      const activeStep=steps[currentStep];
-      if(!activeStep.checkValidity()){activeStep.reportValidity();return;}
-      showStep(Math.min(currentStep+1,steps.length-1));
-    }));
+    document.querySelectorAll('.next-step').forEach(button => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        const activeStep = steps[currentStep];
+        if (!activeStep.checkValidity()) {
+          activeStep.reportValidity();
+          return;
+        }
+        showStep(Math.min(currentStep + 1, steps.length - 1));
+      });
+    });
 
     form.querySelectorAll('.prev-step').forEach(button=>button.addEventListener('click',()=>showStep(Math.max(currentStep-1,0))));
 
